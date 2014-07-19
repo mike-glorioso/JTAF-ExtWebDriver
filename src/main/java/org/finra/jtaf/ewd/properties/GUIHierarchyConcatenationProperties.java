@@ -59,77 +59,7 @@ public class GUIHierarchyConcatenationProperties {
      * Concatenation of property names is done from high index to low. That is
      * to say, for the array {@code ["a", "b", "c"]}, the names searched will be
      * {@code "cba"}, {@code "cb"}, {@code "c"} in that order.
-     * 
-     * @param propertyNames
-     *            names to be concatenated and searched for
-     * @return the first property found associated with a concatenation of the
-     *         given names
-     * @throws Exception
-     */
-    public String getPropertyValue(String[] propertyNames) throws Exception {
-        return getPropertyValue(propertyNames, (String[]) null);
-    }
-
-    /**
-     * Searches over the group of {@code GUIProperties} for a property list
-     * corresponding to a hierarchical concatenation of the given names.
-     * <p>
-     * Concatenation of property names is done from high index to low. That is
-     * to say, for the array {@code ["a", "b", "c"]}, the names searched will be
-     * {@code "cba"}, {@code "cb"}, {@code "c"} in that order.
-     * 
-     * @param propertyNames
-     *            names to be concatenated and searched for
-     * @return the first property list found associated with a concatenation of
-     *         the given names
-     * @throws Exception
-     */
-    public List<String> getPropertyValueAsList(String[] propertyNames) throws Exception {
-        return getPropertyValueAsList(propertyNames, (String[]) null);
-    }
-
-    /**
-     * Searches over the group of {@code GUIProperties} for a property
-     * corresponding to the given name.
-     * 
-     * @param propertyName
-     *            property name to be found
-     * @return the first property found associated with a concatenation of the
-     *         given names
-     * @throws Exception
-     */
-    public String getPropertyValue(String propertyName) throws Exception {
-        String[] propertyNames = new String[1];
-        propertyNames[0] = propertyName;
-
-        return getPropertyValue(propertyNames);
-    }
-
-    /**
-     * Searches over the group of {@code GUIProperties} for a property list
-     * corresponding to the given name.
-     * 
-     * @param propertyName
-     *            property name to be found
-     * @return the first property list found associated with a concatenation of
-     *         the given names
-     * @throws Exception
-     */
-    public List<String> getPropertyValueAsList(String propertyName) throws Exception {
-        String[] propertyNames = new String[1];
-        propertyNames[0] = propertyName;
-
-        return getPropertyValueAsList(propertyNames);
-    }
-
-    /**
-     * Searches over the group of {@code GUIProperties} for a property
-     * corresponding to a hierarchical concatenation of the given names.
-     * <p>
-     * Concatenation of property names is done from high index to low. That is
-     * to say, for the array {@code ["a", "b", "c"]}, the names searched will be
-     * {@code "cba"}, {@code "cb"}, {@code "c"} in that order.
-     * 
+     *
      * @param propertyNames
      *            names to be concatenated and searched for
      * @param parameters
@@ -175,7 +105,7 @@ public class GUIHierarchyConcatenationProperties {
     }
 
     /**
-     * Searches over the group of {@code GUIProperties} for a property list
+     * Searches over the group of {@code GUIProperties} for a property
      * corresponding to a hierarchical concatenation of the given names.
      * <p>
      * Concatenation of property names is done from high index to low. That is
@@ -184,88 +114,35 @@ public class GUIHierarchyConcatenationProperties {
      * 
      * @param propertyNames
      *            names to be concatenated and searched for
-     * @param parameters
-     *            instances of the {@code String} literal <code>"{n}"</code> in
-     *            the retrieved value will be replaced by {@code params[n]}
-     * @return the first property list found associated with a concatenation of
-     *         the given names
-     * @throws Exception
-     */
-    public List<String> getPropertyValueAsList(String[] propertyNames, String... parameters)
-            throws Exception {
-        // Create possible combinations of property names
-        List<String> value;
-        List<String> possiblePropertyName = new ArrayList<String>();
-        StringBuffer fullName = new StringBuffer();
-        for (int i = 0; i < propertyNames.length; i++) {
-            fullName.append(propertyNames[propertyNames.length - i - 1]);
-            possiblePropertyName.add(fullName.toString());
-        }
-
-        // Try to find the property
-        for (int i = 0; i < possiblePropertyName.size(); i++) {
-            String propertyNameCurrent = possiblePropertyName.get(possiblePropertyName.size() - i
-                    - 1);
-
-            for (int y = 0; y < propertyFiles.size(); y++) {
-                try {
-                    GUIProperties propertyFile = propertyFiles.get(y);
-                    if (parameters != null && parameters.length > 0) {
-                        value = propertyFile
-                                .getPropertyValueAsList(propertyNameCurrent, parameters);
-                    } else {
-                        value = propertyFile.getPropertyValueAsList(propertyNameCurrent);
-                    }
-                    return value;
-                } catch (MissingResourceException e) {
-                    // Ignore and continue searching
-                }
-            }
-        }
-
-        throw new Exception("Can't find '" + StringUtils.join(possiblePropertyName, ",")
-                + "' property(ies) in '" + StringUtils.join(propertyFilesNames, ",")
-                + "' property file(s)");
-    }
-
-    /**
-     * Searches over the group of {@code GUIProperties} for a property
-     * corresponding to the given key.
-     * 
-     * @param key
-     *            key to be found
-     * @param parameters
-     *            instances of the {@code String} literal <code>"{n}"</code> in
-     *            the retrieved value will be replaced by {@code params[n]}
      * @return the first property found associated with a concatenation of the
      *         given names
      * @throws Exception
      */
-    public String getPropertyValue(String key, String... parameters) throws Exception {
-        return getPropertyValue(new String[] { key }, parameters);
+    public String getPropertyValue(String[] propertyNames) throws Exception {
+        return getPropertyValue(propertyNames, (String[]) null);
     }
 
     /**
-     * Searches over the group of {@code GUIProperties} for a property list
-     * corresponding to the given key.
-     * 
-     * @param key
-     *            key to be found
-     * @param parameters
-     *            instances of the {@code String} literal <code>"{n}"</code> in
-     *            the retrieved value will be replaced by {@code params[n]}
-     * @return the first property list found associated with a concatenation of
-     *         the given names
+     * Searches over the group of {@code GUIProperties} for a property
+     * corresponding to the given name.
+     *
+     * @param propertyName
+     *            property name to be found
+     * @return the first property found associated with a concatenation of the
+     *         given names
      * @throws Exception
      */
-    public List<String> getPropertyValueAsList(String key, String... parameters) throws Exception {
-        return getPropertyValueAsList(new String[] { key }, parameters);
+    public String getPropertyValue(String propertyName) throws Exception {
+        String[] propertyNames = new String[1];
+        propertyNames[0] = propertyName;
+
+        return getPropertyValue(propertyNames);
     }
 
     /**
      * Searches over the group of {@code GUIProperties} for a property
      * corresponding to the given key.
-     * 
+     *
      * @param key
      *            key to be found
      * @param parameters
@@ -292,6 +169,129 @@ public class GUIHierarchyConcatenationProperties {
     }
 
     /**
+     * Searches over the group of {@code GUIProperties} for a property
+     * corresponding to the given key.
+     *
+     * @param key
+     *            key to be found
+     * @param parameters
+     *            instances of the {@code String} literal <code>"{n}"</code> in
+     *            the retrieved value will be replaced by {@code params[n]}
+     * @return the first property found associated with a concatenation of the
+     *         given names
+     * @throws Exception
+     */
+    public String getPropertyValue(String key, String... parameters) throws Exception {
+        return getPropertyValue(new String[] { key }, parameters);
+    }
+
+    /**
+     * Searches over the group of {@code GUIProperties} for a property list
+     * corresponding to a hierarchical concatenation of the given names.
+     * <p>
+     * Concatenation of property names is done from high index to low. That is
+     * to say, for the array {@code ["a", "b", "c"]}, the names searched will be
+     * {@code "cba"}, {@code "cb"}, {@code "c"} in that order.
+     * 
+     * @param propertyNames
+     *            names to be concatenated and searched for
+     * @return the first property list found associated with a concatenation of
+     *         the given names
+     * @throws Exception
+     */
+    public List<String> getPropertyValueAsList(String[] propertyNames, String delimiter) throws Exception {
+        return getPropertyValueAsList(propertyNames,delimiter,  (String[]) null);
+    }
+
+    /**
+     * Searches over the group of {@code GUIProperties} for a property list
+     * corresponding to the given name.
+     * 
+     * @param propertyName
+     *            property name to be found
+     * @return the first property list found associated with a concatenation of
+     *         the given names
+     * @throws Exception
+     */
+    public List<String> getPropertyValueAsList(String propertyName, String delimiter) throws Exception {
+        String[] propertyNames = new String[1];
+        propertyNames[0] = propertyName;
+
+        return getPropertyValueAsList(propertyNames,delimiter);
+    }
+
+    /**
+     * Searches over the group of {@code GUIProperties} for a property list
+     * corresponding to a hierarchical concatenation of the given names.
+     * <p>
+     * Concatenation of property names is done from high index to low. That is
+     * to say, for the array {@code ["a", "b", "c"]}, the names searched will be
+     * {@code "cba"}, {@code "cb"}, {@code "c"} in that order.
+     * 
+     * @param propertyNames
+     *            names to be concatenated and searched for
+     * @param parameters
+     *            instances of the {@code String} literal <code>"{n}"</code> in
+     *            the retrieved value will be replaced by {@code params[n]}
+     * @return the first property list found associated with a concatenation of
+     *         the given names
+     * @throws Exception
+     */
+    public List<String> getPropertyValueAsList(String[] propertyNames, String delimiter, String... parameters)
+            throws Exception {
+        // Create possible combinations of property names
+        List<String> value;
+        List<String> possiblePropertyName = new ArrayList<String>();
+        StringBuffer fullName = new StringBuffer();
+        for (int i = 0; i < propertyNames.length; i++) {
+            fullName.append(propertyNames[propertyNames.length - i - 1]);
+            possiblePropertyName.add(fullName.toString());
+        }
+
+        // Try to find the property
+        for (int i = 0; i < possiblePropertyName.size(); i++) {
+            String propertyNameCurrent = possiblePropertyName.get(possiblePropertyName.size() - i
+                    - 1);
+
+            for (int y = 0; y < propertyFiles.size(); y++) {
+                try {
+                    GUIProperties propertyFile = propertyFiles.get(y);
+                    if (parameters != null && parameters.length > 0) {
+                        value = propertyFile
+                                .getPropertyValueAsList(propertyNameCurrent,delimiter, parameters);
+                    } else {
+                        value = propertyFile.getPropertyValueAsList(propertyNameCurrent,delimiter);
+                    }
+                    return value;
+                } catch (MissingResourceException e) {
+                    // Ignore and continue searching
+                }
+            }
+        }
+
+        throw new Exception("Can't find '" + StringUtils.join(possiblePropertyName, ",")
+                + "' property(ies) in '" + StringUtils.join(propertyFilesNames, ",")
+                + "' property file(s)");
+    }
+
+    /**
+     * Searches over the group of {@code GUIProperties} for a property list
+     * corresponding to the given key.
+     * 
+     * @param key
+     *            key to be found
+     * @param parameters
+     *            instances of the {@code String} literal <code>"{n}"</code> in
+     *            the retrieved value will be replaced by {@code params[n]}
+     * @return the first property list found associated with a concatenation of
+     *         the given names
+     * @throws Exception
+     */
+    public List<String> getPropertyValueAsList(String key, String delimiter, String... parameters) throws Exception {
+        return getPropertyValueAsList(new String[] { key }, delimiter, parameters);
+    }
+
+    /**
      * Searches over the group of {@code GUIProperties} for a property list
      * corresponding to the given key.
      * 
@@ -305,7 +305,7 @@ public class GUIHierarchyConcatenationProperties {
      *         the given names
      * @throws Exception
      */
-    public List<String> getPropertyValueAsList(String key, Object[] parameters) throws Exception {
+    public List<String> getPropertyValueAsList(String key,String delimiter, Object[] parameters) throws Exception {
         if (parameters != null && parameters.length > 0) {
             String parameters2[] = new String[parameters.length];
             for (int i = 0; i < parameters.length; i++) {
@@ -314,9 +314,9 @@ public class GUIHierarchyConcatenationProperties {
                     parameters2[i] = String.valueOf(parameter);
                 }
             }
-            return getPropertyValueAsList(new String[] { key }, parameters2);
+            return getPropertyValueAsList(new String[] { key },delimiter, parameters2);
         } else {
-            return getPropertyValueAsList(key);
+            return getPropertyValueAsList(key, delimiter);
         }
     }
 }

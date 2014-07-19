@@ -86,6 +86,24 @@ public class GUIProperties {
         }
     }
 
+    private String getStringOrDefault(String key, Object params[]) throws Exception {
+        String defaultValue = "Default value";
+        try {
+            if ((params != null) && (params.length > 0)) {
+                defaultValue = MessageFormat.format(RESOURCE_BUNDLE.getString(key), params).trim();
+            } else {
+                defaultValue =  RESOURCE_BUNDLE.getString(key).trim();
+            }
+        } catch (MissingResourceException e) {
+            throw e;
+        } catch (IllegalArgumentException ie) {
+            throw ie;
+        }
+        finally {
+            return defaultValue;
+        }
+    }
+
     /**
      * Retrieves the property associated with the given key as a {@code String}.
      * 
@@ -102,6 +120,22 @@ public class GUIProperties {
     }
 
     /**
+     * Retrieves the property associated with the given key as a {@code String}.
+     *
+     * @param key
+     *            the key to be retrieved
+     * @param params
+     *            instances of the {@code String} literal <code>"{n}"</code> in
+     *            the retrieved value will be replaced by {@code params[n]}
+     * @return the parameterized property associated with the given key, o
+     *         If no value is found, it return "default value" string;
+     * @throws Exception
+     */
+    public String getPropertyValueOrDefault(String key, String... params) throws Exception {
+        return getStringOrDefault(key, params);
+    }
+
+    /**
      * Retrieves the property associated with the given key as a {@code List} of
      * {@code String}s.
      * 
@@ -113,18 +147,14 @@ public class GUIProperties {
      * @return the parameterized property list associated with the given key
      * @throws Exception
      */
-    public List<String> getPropertyValueAsList(String key, String... params) throws Exception {
+    public List<String> getPropertyValueAsList(String key, String delimiter, String... params) throws Exception {
         try {
-            String properties[] = RESOURCE_BUNDLE.getStringArray(key);
-            if ((params != null) && (params.length > 0)) {
-                List<String> returnProperties = new ArrayList<String>();
-                for (String property : properties) {
-                    returnProperties.add(MessageFormat.format(property, (Object[]) params).trim());
-                }
-                return returnProperties;
-            } else {
+            String properties[] = getString(key, params).split(delimiter);
+            if (properties.length > 0) {
                 return Arrays.asList(properties);
             }
+            else
+                return null;
         } catch (MissingResourceException e) {
             throw e;
         } catch (IllegalArgumentException ie) {
