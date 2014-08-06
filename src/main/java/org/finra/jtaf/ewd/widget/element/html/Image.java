@@ -17,6 +17,7 @@
 package org.finra.jtaf.ewd.widget.element.html;
 
 import org.finra.jtaf.ewd.widget.IImage;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.finra.jtaf.ewd.widget.element.InteractiveElement;
 
@@ -27,8 +28,22 @@ import org.finra.jtaf.ewd.widget.element.InteractiveElement;
  */
 public class Image extends InteractiveElement implements IImage {
 
+    /**
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
     public Image(String locator) {
         super(locator);
+    }
+
+    /**
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public Image(LocatorType type, String locator) {
+        super(type, locator);
     }
 
     /*

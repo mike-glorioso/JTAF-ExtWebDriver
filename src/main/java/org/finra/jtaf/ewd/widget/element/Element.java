@@ -37,6 +37,7 @@ import org.finra.jtaf.ewd.timer.WaitForConditionTimer;
 import org.finra.jtaf.ewd.timer.WaitForConditionTimer.ITimerCallback;
 import org.finra.jtaf.ewd.timer.WidgetTimeoutException;
 import org.finra.jtaf.ewd.widget.IElement;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -56,10 +57,11 @@ import org.xml.sax.XMLReader;
  */
 public class Element implements IElement {
 	private ExtWebDriver gd;
+    private final LocatorType locatorType;
 	private final String locator;
 	private static final long DEFAULT_INTERVAL = 100;
 
-	protected enum HIGHLIGHT_MODES {
+    protected enum HIGHLIGHT_MODES {
 		FIND, GET, PUT, NONE
 	}
 
@@ -69,8 +71,20 @@ public class Element implements IElement {
 	 *            XPath, ID, name, CSS Selector, class name, or tag name
 	 */
 	public Element(String locator) {
+        this.locatorType = null;
 		this.locator = locator;
 	}
+
+    /**
+     * @param type
+     *            XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *            XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public Element(LocatorType type, String locator) {
+        this.locatorType = type;
+        this.locator = locator;
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -660,62 +674,116 @@ public class Element implements IElement {
 		getGUIDriver().selectLastFrame();
 		WebDriver wd = getGUIDriver().getWrappedDriver();
 
-		WebElement webElement;
-		try {
-			webElement = wd.findElement(By.xpath(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
+        WebElement webElement;
 
-		try {
-			webElement = wd.findElement(By.id(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
-		try {
-			webElement = wd.findElement(By.name(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
+        if(locatorType != null) {
+            switch(locatorType) {
+                case XPATH:
+                    try {
+                        webElement = wd.findElement(By.xpath(locator));
+                        highlight(highlightMode);
+                        return webElement;
+                    } catch (Exception e) {
+                    }
+                    break;
+                case ID:
+                    try {
+                        webElement = wd.findElement(By.id(locator));
+                        highlight(highlightMode);
+                        return webElement;
+                    } catch (Exception e) {
+                    }
+                    break;
+                case NAME:
+                    try {
+                        webElement = wd.findElement(By.name(locator));
+                        highlight(highlightMode);
+                        return webElement;
+                    } catch (Exception e) {
+                    }
+                    break;
+                case CSSSELECTOR:
+                    try {
+                        webElement = wd.findElement(By.cssSelector(locator));
+                        highlight(highlightMode);
+                        return webElement;
+                    } catch (Exception e) {
+                    }
+                    break;
+                case CLASSNAME:
+                    try {
+                        webElement = wd.findElement(By.className(locator));
+                        highlight(highlightMode);
+                        return webElement;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case TAGNAME:
+                    try {
+                        webElement = wd.findElement(By.tagName(locator));
+                        highlight(highlightMode);
+                        return webElement;
+                    } catch (Exception e) {
+                    }
+                    break;
+            }
+        }else {
+            try {
+                webElement = wd.findElement(By.xpath(locator));
+                if (webElement != null) {
+                    highlight(highlightMode);
+                    return webElement;
+                }
+            } catch (Exception e) {
+            }
 
-		try {
-			webElement = wd.findElement(By.cssSelector(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
+            try {
+                webElement = wd.findElement(By.id(locator));
+                if (webElement != null) {
+                    highlight(highlightMode);
+                    return webElement;
+                }
+            } catch (Exception e) {
+            }
+            try {
+                webElement = wd.findElement(By.name(locator));
+                if (webElement != null) {
+                    highlight(highlightMode);
+                    return webElement;
+                }
+            } catch (Exception e) {
+            }
 
-		try {
-			webElement = wd.findElement(By.className(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
+            try {
+                webElement = wd.findElement(By.cssSelector(locator));
+                if (webElement != null) {
+                    highlight(highlightMode);
+                    return webElement;
+                }
+            } catch (Exception e) {
+            }
 
-		try {
-			webElement = wd.findElement(By.tagName(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
+            try {
+                webElement = wd.findElement(By.className(locator));
+                if (webElement != null) {
+                    highlight(highlightMode);
+                    return webElement;
+                }
+            } catch (Exception e) {
+            }
 
-		throw new NoSuchElementException("Could not find element at " + locator);
+            try {
+                webElement = wd.findElement(By.tagName(locator));
+                if (webElement != null) {
+                    highlight(highlightMode);
+                    return webElement;
+                }
+            } catch (Exception e) {
+            }
+        }
 
+        throw new NoSuchElementException("Could not find element at " + locator);
 	}
 
 	/**
@@ -730,8 +798,6 @@ public class Element implements IElement {
 	/**
 	 * Set the background color of a particular web element to a certain color
 	 * 
-	 * @param element
-	 *            the element to highlight
 	 * @param color
 	 *            the color to use for highlight
 	 * @throws Exception

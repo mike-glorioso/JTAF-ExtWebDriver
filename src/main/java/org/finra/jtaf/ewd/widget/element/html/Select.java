@@ -19,10 +19,7 @@ package org.finra.jtaf.ewd.widget.element.html;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.finra.jtaf.ewd.widget.IReadableElement;
-import org.finra.jtaf.ewd.widget.ISelectList;
-import org.finra.jtaf.ewd.widget.WidgetException;
-import org.finra.jtaf.ewd.widget.WidgetRuntimeException;
+import org.finra.jtaf.ewd.widget.*;
 import org.finra.jtaf.ewd.widget.element.InteractiveElement;
 import org.openqa.selenium.WebElement;
 
@@ -31,8 +28,22 @@ import org.openqa.selenium.WebElement;
  */
 public class Select extends InteractiveElement implements ISelectList {
 
+    /**
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
     public Select(String locator) {
         super(locator);
+    }
+
+    /**
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public Select(LocatorType type, String locator) {
+        super(type, locator);
     }
 
     /*

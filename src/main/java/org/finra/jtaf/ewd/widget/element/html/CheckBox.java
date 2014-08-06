@@ -19,6 +19,7 @@ package org.finra.jtaf.ewd.widget.element.html;
 import org.finra.jtaf.ewd.timer.WaitForConditionTimer.ITimerCallback;
 import org.finra.jtaf.ewd.timer.WidgetTimeoutException;
 import org.finra.jtaf.ewd.widget.ICheckBox;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.finra.jtaf.ewd.widget.WidgetRuntimeException;
 import org.finra.jtaf.ewd.widget.element.InteractiveElement;
@@ -43,6 +44,16 @@ public class CheckBox extends InteractiveElement implements ICheckBox {
      */
     public CheckBox(String locator) {
         super(locator);
+    }
+
+    /**
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public CheckBox(LocatorType type, String locator) {
+        super(type, locator);
     }
 
     /**

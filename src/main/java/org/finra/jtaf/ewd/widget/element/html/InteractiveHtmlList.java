@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.finra.jtaf.ewd.widget.IElement;
 import org.finra.jtaf.ewd.widget.IInteractiveElement;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.finra.jtaf.ewd.widget.element.InteractiveElement;
 
@@ -39,6 +40,16 @@ public class InteractiveHtmlList extends HtmlList implements IElement {
      */
     public InteractiveHtmlList(String locator) {
         super(locator);
+    }
+
+    /**
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public InteractiveHtmlList(LocatorType type, String locator) {
+        super(type, locator);
     }
 
     /**

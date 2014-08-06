@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.finra.jtaf.ewd.widget.IElement;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.finra.jtaf.ewd.widget.element.Element;
 import org.openqa.selenium.By;
@@ -42,6 +43,16 @@ public class HtmlList extends Element implements IElement {
      */
     public HtmlList(String locator) {
         super(locator);
+    }
+
+    /**
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public HtmlList(LocatorType type, String locator) {
+        super(type, locator);
     }
 
     /**

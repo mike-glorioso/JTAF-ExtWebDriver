@@ -16,10 +16,7 @@
  */
 package org.finra.jtaf.ewd.widget.element;
 
-import org.finra.jtaf.ewd.widget.IElement;
-import org.finra.jtaf.ewd.widget.IInteractiveElement;
-import org.finra.jtaf.ewd.widget.Keys;
-import org.finra.jtaf.ewd.widget.WidgetException;
+import org.finra.jtaf.ewd.widget.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -38,6 +35,16 @@ public class InteractiveElement extends Element implements IInteractiveElement {
 	public InteractiveElement(String locator) {
 		super(locator);
 	}
+
+    /**
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public InteractiveElement(LocatorType type, String locator) {
+        super(type, locator);
+    }
 
 	/*
 	 * (non-Javadoc)
