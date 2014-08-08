@@ -23,14 +23,29 @@ package org.finra.jtaf.ewd.widget.element.html;
 import java.util.List;
 
 import org.finra.jtaf.ewd.widget.IDropDown;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.finra.jtaf.ewd.widget.WidgetRuntimeException;
 import org.finra.jtaf.ewd.widget.element.InteractiveElement;
 
 public class DropDown extends InteractiveElement implements IDropDown {
 
+    /**
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
     public DropDown(String locator) {
         super(locator);
+    }
+
+    /**
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public DropDown(LocatorType type, String locator) {
+        super(type, locator);
     }
 
     /*

@@ -17,6 +17,7 @@
 package org.finra.jtaf.ewd.widget.element.html;
 
 import org.finra.jtaf.ewd.widget.IRadioGroup;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.finra.jtaf.ewd.widget.element.InteractiveElement;
 import org.openqa.selenium.*;
@@ -30,8 +31,22 @@ import java.util.List;
  */
 public class RadioGroup extends InteractiveElement implements IRadioGroup {
 
+    /**
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
     public RadioGroup(String locator) {
         super(locator);
+    }
+
+    /**
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public RadioGroup(LocatorType type, String locator) {
+        super(type, locator);
     }
 
     /*

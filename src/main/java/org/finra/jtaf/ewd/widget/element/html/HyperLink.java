@@ -17,6 +17,7 @@
 package org.finra.jtaf.ewd.widget.element.html;
 
 import org.finra.jtaf.ewd.widget.IHyperLink;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.finra.jtaf.ewd.widget.element.InteractiveElement;
 
@@ -25,8 +26,22 @@ import org.finra.jtaf.ewd.widget.element.InteractiveElement;
  */
 public class HyperLink extends InteractiveElement implements IHyperLink {
 
+    /**
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
     public HyperLink(String locator) {
         super(locator);
+    }
+
+    /**
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public HyperLink(LocatorType type, String locator) {
+        super(type, locator);
     }
 
     /*

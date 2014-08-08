@@ -33,10 +33,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.ccil.cowan.tagsoup.Parser;
-import org.finra.jtaf.ewd.widget.IElement;
-import org.finra.jtaf.ewd.widget.IReadableElement;
-import org.finra.jtaf.ewd.widget.ITable;
-import org.finra.jtaf.ewd.widget.WidgetException;
+import org.finra.jtaf.ewd.widget.*;
 import org.finra.jtaf.ewd.widget.element.Element;
 import org.finra.jtaf.ewd.widget.element.InteractiveElement;
 import org.openqa.selenium.*;
@@ -65,9 +62,17 @@ public class Table extends InteractiveElement implements ITable {
     }
 
     /**
-     * 
+     * @param type
+     *           XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
      * @param locator
-     *            XPath, ID, name, CSS Selector, class name, or tag name
+     *           XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public Table(LocatorType type, String locator) {
+        super(type, locator);
+    }
+
+    /**
+     * 
      * @return String of the xpath
      * @throws WidgetException
      */

@@ -21,6 +21,7 @@ import org.finra.jtaf.ewd.HighlightProvider;
 import org.finra.jtaf.ewd.session.SessionManager;
 import org.finra.jtaf.ewd.widget.IElement;
 import org.finra.jtaf.ewd.widget.IInteractiveElement;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.finra.jtaf.ewd.widget.element.html.Button;
 import org.finra.jtaf.ewd.widget.element.html.Input;
@@ -560,6 +561,48 @@ public class ElementTest {
     	Assert.assertEquals(in.getValue(), "");
     	in.focusOn();
     	Assert.assertEquals(in.getValue(), "you focused!");
+    }
+
+    @Test
+    public void testLocatorTypeXPath() throws WidgetException {
+        wd.open(url);
+        IElement e = new Element(LocatorType.XPATH, "//h1[text()='Constructor Test Header']");
+        Assert.assertEquals("Constructor Test Header", e.getText());
+    }
+
+    @Test
+    public void testLocatorTypeID() throws WidgetException {
+        wd.open(url);
+        IElement e = new Element(LocatorType.ID, "lastSpanId");
+        Assert.assertEquals("Constructor Test Header", e.getText());
+    }
+
+    @Test
+    public void testLocatorTypeName() throws WidgetException {
+        wd.open(url);
+        IElement e = new Element(LocatorType.NAME, "lastSpanName");
+        Assert.assertEquals("Constructor Test Header", e.getText());
+    }
+
+    @Test
+    public void testLocatorTypeCSSSelector() throws WidgetException {
+        wd.open(url);
+        IElement e = new Element(LocatorType.CSSSELECTOR, "#lastSpanId");
+        Assert.assertEquals("Constructor Test Header", e.getText());
+    }
+
+    @Test
+    public void testLocatorTypeClassName() throws WidgetException {
+        wd.open(url);
+        IElement e = new Element(LocatorType.CLASSNAME, "sampleClass");
+        Assert.assertEquals("Constructor Test Header", e.getText());
+    }
+
+    @Test
+    public void testLocatorTypeTagName() throws WidgetException {
+        wd.open(url);
+        IElement e = new Element(LocatorType.TAGNAME, "h1");
+        Assert.assertEquals("Constructor Test Header", e.getText());
     }
     
     public String getRgb(String rgba){

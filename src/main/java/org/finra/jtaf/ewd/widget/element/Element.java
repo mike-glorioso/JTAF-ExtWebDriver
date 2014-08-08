@@ -28,6 +28,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.log4j.Logger;
 import org.ccil.cowan.tagsoup.Parser;
 import org.finra.jtaf.ewd.ExtWebDriver;
 import org.finra.jtaf.ewd.HighlightProvider;
@@ -37,12 +38,14 @@ import org.finra.jtaf.ewd.timer.WaitForConditionTimer;
 import org.finra.jtaf.ewd.timer.WaitForConditionTimer.ITimerCallback;
 import org.finra.jtaf.ewd.timer.WidgetTimeoutException;
 import org.finra.jtaf.ewd.widget.IElement;
+import org.finra.jtaf.ewd.widget.LocatorType;
 import org.finra.jtaf.ewd.widget.WidgetException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.Locatable;
@@ -58,10 +61,104 @@ public class Element implements IElement {
 	private ExtWebDriver gd;
 	private final String locator;
 	private static final long DEFAULT_INTERVAL = 100;
+    private static Logger logger = Logger.getLogger(Element.class);
 
-	protected enum HIGHLIGHT_MODES {
+    private By wdByLocator;
+
+    protected enum HIGHLIGHT_MODES {
 		FIND, GET, PUT, NONE
 	}
+
+    private static class ByTrialAndError extends By {
+        private String locator;
+
+        public ByTrialAndError(String locator) {
+            this.locator = locator;
+        }
+
+        private String getLocator() {
+            return locator;
+        }
+
+        @Override
+        public String toString() {
+            return "By.trialAndError: \"" + locator + "\"";
+        }
+
+        @Override
+        public List<WebElement> findElements(SearchContext context) {
+            String locator = getLocator();
+            List<WebElement> webElements;
+
+            try {
+                webElements = context.findElements(By.xpath(locator));
+                if (webElements != null && !webElements.isEmpty()) {
+                    return webElements;
+                }
+            } catch (NoSuchElementException ne) {
+                //continue, as there are other methods to try
+            } catch (RuntimeException e) {
+                logger.warn("Find elements " + toString() + " with xpath is throwing an unexpected exception", e);
+            }
+
+            try {
+                webElements = context.findElements(By.id(locator));
+                if (webElements != null && !webElements.isEmpty()) {
+                    return webElements;
+                }
+            } catch (NoSuchElementException ne) {
+                //continue, as there are other methods to try
+            } catch (RuntimeException e) {
+                logger.warn("Find elements " + toString() + " with id is throwing an unexpected exception", e);
+            }
+
+            try {
+                webElements = context.findElements(By.name(locator));
+                if (webElements != null && !webElements.isEmpty()) {
+                    return webElements;
+                }
+            } catch (NoSuchElementException ne) {
+                //continue, as there are other methods to try
+            } catch (RuntimeException e) {
+                logger.warn("Find elements " + toString() + " with name is throwing an unexpected exception", e);
+            }
+
+            try {
+                webElements = context.findElements(By.cssSelector(locator));
+                if (webElements != null && !webElements.isEmpty()) {
+                    return webElements;
+                }
+            } catch (NoSuchElementException ne) {
+                //continue, as there are other methods to try
+            } catch (RuntimeException e) {
+                logger.warn("Find elements " + toString() + " with CSS selector is throwing an unexpected exception", e);
+            }
+
+            try {
+                webElements = context.findElements(By.className(locator));
+                if (webElements != null && !webElements.isEmpty()) {
+                    return webElements;
+                }
+            } catch (NoSuchElementException ne) {
+                //continue, as there are other methods to try
+            } catch (RuntimeException e) {
+                logger.warn("Find elements " + toString() + " with class name is throwing an unexpected exception", e);
+            }
+
+            try {
+                webElements = context.findElements(By.tagName(locator));
+                if (webElements != null && !webElements.isEmpty()) {
+                    return webElements;
+                }
+            } catch (NoSuchElementException ne) {
+                //continue, as there are other methods to try
+            } catch (RuntimeException e) {
+                logger.warn("Find elements " + toString() + " with tag name is throwing an unexpected exception", e);
+            }
+
+            throw new NoSuchElementException("Could not find element " + toString());
+        }
+    }
 
 	/**
 	 * 
@@ -69,8 +166,45 @@ public class Element implements IElement {
 	 *            XPath, ID, name, CSS Selector, class name, or tag name
 	 */
 	public Element(String locator) {
-		this.locator = locator;
-	}
+        this(null, locator);
+    }
+
+    /**
+     * @param type
+     *            XPATH, ID, NAME, CSSSELECTOR, CLASSNAME, or TAGNAME
+     * @param locator
+     *            XPath, ID, name, CSS Selector, class name, or tag name string
+     */
+    public Element(LocatorType type, String locator) {
+        this.locator = locator;
+        if (type != null) {
+            switch (type) {
+                case XPATH:
+                    wdByLocator = By.xpath(locator);
+                    break;
+                case ID:
+                    wdByLocator = By.id(locator);
+                    break;
+                case NAME:
+                    wdByLocator = By.name(locator);
+                    break;
+                case CSSSELECTOR:
+                    wdByLocator = By.cssSelector(locator);
+                    break;
+                case CLASSNAME:
+                    wdByLocator = By.className(locator);
+                    break;
+                case TAGNAME:
+                    wdByLocator = By.tagName(locator);
+                    break;
+                case TRIAL_AND_ERROR:
+                    wdByLocator = new ByTrialAndError(locator);
+                    break;
+            }
+        } else {
+            wdByLocator = new ByTrialAndError(locator);
+        }
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -660,62 +794,14 @@ public class Element implements IElement {
 		getGUIDriver().selectLastFrame();
 		WebDriver wd = getGUIDriver().getWrappedDriver();
 
-		WebElement webElement;
-		try {
-			webElement = wd.findElement(By.xpath(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
+        try {
+            WebElement webElement = wd.findElement(wdByLocator);
+            highlight(highlightMode);
+            return webElement;
+        } catch (Exception e) {
+        }
 
-		try {
-			webElement = wd.findElement(By.id(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
-		try {
-			webElement = wd.findElement(By.name(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
-
-		try {
-			webElement = wd.findElement(By.cssSelector(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
-
-		try {
-			webElement = wd.findElement(By.className(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
-
-		try {
-			webElement = wd.findElement(By.tagName(locator));
-			if (webElement != null) {
-				highlight(highlightMode);
-				return webElement;
-			}
-		} catch (Exception e) {
-		}
-
-		throw new NoSuchElementException("Could not find element at " + locator);
-
+        throw new NoSuchElementException("Could not find element at " + locator);
 	}
 
 	/**
@@ -730,8 +816,6 @@ public class Element implements IElement {
 	/**
 	 * Set the background color of a particular web element to a certain color
 	 * 
-	 * @param element
-	 *            the element to highlight
 	 * @param color
 	 *            the color to use for highlight
 	 * @throws Exception
