@@ -262,13 +262,11 @@
     </profiles>
 	<dependencies>
 		<!-- project's sole purpose is to provide standardized access to Selenium Web Driver -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-server</artifactId>
-			<version>2.42.2</version>
-			<type>pom</type>
-		</dependency>
-
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>2.42.2</version>
+        </dependency>
 		<!-- tagsoup for view xpath tags easier -->
 		<dependency>
 			<groupId>org.ccil.cowan.tagsoup</groupId>
